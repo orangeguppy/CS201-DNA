@@ -15,8 +15,7 @@ public class App {
         computeScore();
     }
 
-    public static void readData() { // this method reads each line of data. 
-                                    // 1 line of data corresponds with 1 sequence
+    public static void readData() {
         try (Scanner sc = new Scanner(new File(dataFile))) {
             while (sc.hasNext()) {
                 map.put(new DNASequence(sc.next()), null);
@@ -30,17 +29,11 @@ public class App {
     public static void verifyData() {
         try (Scanner sc = new Scanner(new File(verifyFile))) {
             while (sc.hasNext()) {
-                // For each DNA sequence in verifyFile
                 DNASequence testSequence = new DNASequence(sc.next());
-
-                // This returns a Map of all DNA sequences from dataFile similar to testSequence
                 Map<DNASequence, Integer> bucket = map.getObjectsInSameBucket(testSequence);
                 int numSimilar = 0;
 
                 for (DNASequence dnaSequence : bucket.keySet()) {
-                    // For each key in bucket, compare its similarity to testSequence
-                    // This loop counts the number of DNA sequences in the bucket keyset similar
-                    // to test sequence
                     numSimilar += computeSimilarity(dnaSequence, testSequence);
                 }
                 result.add(new TestEntry(testSequence, numSimilar, bucket.size()));
@@ -51,7 +44,6 @@ public class App {
     }
 
     public static int computeSimilarity(DNASequence x, DNASequence y) {
-         // return 0 if not similar enough, return 1 if similar enough
         String s1 = x.getSequence();
         String s2 = y.getSequence();
 
@@ -70,14 +62,13 @@ public class App {
     public static void computeScore() {
         double total = 0;
         double score = 0;
-        int size = result.size(); // number of TestEntries
+        int size = result.size();
         int numTotalSimilarEntries = 0;
         int numTotalEntries = 0;
         String outputFile = "output_" + dataFile + "_" + verifyFile +  "_errorThreshold_" + errorThreshold + ".txt";
 
          try (FileWriter myWriter = new FileWriter(outputFile)) {
             for (TestEntry te : result) {
-                // for each TestEntry in result
                 System.out.print(te + " = ");
                 myWriter.write(te + " = ");
 
